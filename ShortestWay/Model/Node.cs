@@ -1,31 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Xml;
 using System.Xml.Serialization;
+using ShortestWay.Exceptions;
 
-namespace ShortestWay.Data
+namespace ShortestWay.Model
 {
-    [XmlRoot("graph")]
-    public class Graph
-    {
-        [XmlElement("node")]
-        public virtual Node[] Nodes { get; set; }
-
-        public static Graph Create(string path)
-        {
-            var xmlSerializer = new XmlSerializer(typeof(Graph));
-            using (var xr = new XmlTextReader(path))
-            {
-                var result = (Graph)xmlSerializer.Deserialize(xr);
-                foreach (var node in result.Nodes)
-                {
-                    node.Graph = result;
-                }
-                return result;
-            }
-        }
-    }
-
     [XmlRoot("node")]
     public class Node
     {
@@ -63,26 +42,39 @@ namespace ShortestWay.Data
                 return false;
             }
 
+            if (node.Equals(this))
+            {
+                return false;
+            }
+
+            if(Links == null)
+                throw new LinksAreNotSetupException(Id); 
+
             return Links.Any(t => t.Ref == node.Id);
         }
 
-        public virtual List<Node> Linked()
+        public virtual IList<Node> Linked()
         {
-            return Graph.Nodes.Where(t => t.IsLinked(this)).ToList();
+            if (Graph == null)
+            {
+                throw new ParentGraphIsNotSetupException(Id);
+            }
+
+            return Graph.Linked(this);
         }
 
         public virtual Graph Graph { get; set; }
 
         public virtual int? Mark { get; set; }
-    }
 
-    [XmlRoot("link")]
-    public class Link
-    {
-        [XmlAttribute("ref")]
-        public virtual int Ref { get; set; }
+        public virtual int LinkWeight(Node node)
+        {
+            if (!IsLinked(node))
+            {
+                throw new NodesAreNotLinkedToGetWeghtException(Id, node.Id);
+            }
 
-        [XmlAttribute("weight")]
-        public virtual int Weight { get; set; }
+            return Links.Where(t => t.Ref == node.Id).Select(t => t.Weight).Min();
+        }
     }
 }

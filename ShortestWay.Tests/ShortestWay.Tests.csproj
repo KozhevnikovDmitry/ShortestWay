@@ -48,7 +48,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GraphTest.cs" />
+    <Compile Include="GraphProviderTests.cs" />
+    <Compile Include="Model\GraphTest.cs" />
+    <Compile Include="Model\NodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -58,7 +60,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="shortestway-sample.xml">
+    <Content Include="xml\wrong.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\simple-valid.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\shortestway-sample.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
