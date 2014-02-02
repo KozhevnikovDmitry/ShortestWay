@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Moq;
+﻿using Moq;
 using NUnit.Framework;
 using ShortestWay.Exceptions;
 using ShortestWay.Model;
@@ -156,33 +155,6 @@ namespace ShortestWay.Tests.Model
         }
 
         [Test]
-        public void Linked_ThrowsIfGraphIsNotSetup_Test()
-        {
-            // Arrange
-            var node = new Node { Id = 1 };
-
-            // Assert
-            var ex = Assert.Throws<ParentGraphIsNotSetupException>(() => node.Linked());
-            Assert.AreEqual(ex.Message, "Parent graph is not setup for node [1]");
-        }
-
-        [Test]
-        public void Linked_Test()
-        {
-            // Arrange
-            var linked = new List<Node>();
-            var graph = Mock.Of<Graph>();
-            var node = new Node { Graph = graph };
-            Mock.Get(graph).Setup(t => t.Linked(node)).Returns(linked);
-
-            // Act
-            var result = node.Linked();
-
-            // Assert
-            Assert.AreEqual(result, linked);
-        }
-
-        [Test]
         public void LinkWeight_ThrowsIfNotLinked_Test()
         {
             // Arrange
@@ -190,7 +162,7 @@ namespace ShortestWay.Tests.Model
             var node = new Mock<Node> { CallBase = true };
             node.Setup(t => t.IsLinked(target)).Returns(false);
             node.Setup(t => t.Id).Returns(1);
-            
+
             // Assert
             var ex = Assert.Throws<NodesAreNotLinkedToGetWeghtException>(() => node.Object.LinkWeight(target));
             Assert.AreEqual(ex.Message, "Nodes [1] and [2] are not linked, cannot get weight");

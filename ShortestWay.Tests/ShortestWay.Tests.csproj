@@ -48,7 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dijkstra\DijkstraNodeTests.cs" />
+    <Compile Include="Dijkstra\DijkstraTests.cs" />
     <Compile Include="GraphProviderTests.cs" />
+    <Compile Include="Dijkstra\DijkstraGraphTests.cs" />
     <Compile Include="Model\GraphTest.cs" />
     <Compile Include="Model\NodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

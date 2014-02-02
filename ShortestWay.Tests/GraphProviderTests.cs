@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using ShortestWay.Dijkstra;
 using ShortestWay.Exceptions;
 using ShortestWay.Model;
 
@@ -15,7 +16,20 @@ namespace ShortestWay.Tests
             var provider = new GraphProvider();
 
             // Act
-            Graph graph = provider.Load(@"data\simple-valid.xml");
+            var graph = provider.Load<Graph<Node>>(@"xml\simple-valid.xml");
+
+            // Assert
+            Assert.AreEqual(graph.Nodes.Count(), 4);
+        }
+        
+        [Test]
+        public void Load_Dijkstra_Test()
+        {
+            // Arrange
+            var provider = new GraphProvider();
+
+            // Act
+            var graph = provider.Load<DijkstraGraph>(@"xml\simple-valid.xml");
 
             // Assert
             Assert.AreEqual(graph.Nodes.Count(), 4);
@@ -28,8 +42,8 @@ namespace ShortestWay.Tests
             var provider = new GraphProvider();
             
             // Assert
-            var ex = Assert.Throws<SourceIsNotExistsException>(() => provider.Load(@"data\not_exists.xml"));
-            Assert.AreEqual(ex.Message, "Source is not exists on path: [data\\not_exists.xml]");
+            var ex = Assert.Throws<SourceIsNotExistsException>(() => provider.Load<Graph<Node>>(@"xml\not_exists.xml"));
+            Assert.AreEqual(ex.Message, "Source is not exists on path: [xml\\not_exists.xml]");
         }
 
         [Test]
@@ -39,7 +53,7 @@ namespace ShortestWay.Tests
             var provider = new GraphProvider();
 
             // Assert
-            Assert.Throws<SourceIsNotValidException>(() => provider.Load(@"data\wrong.xml"));
+            Assert.Throws<SourceIsNotValidException>(() => provider.Load<Graph<Node>>(@"xml\wrong.xml"));
         }
 
     }

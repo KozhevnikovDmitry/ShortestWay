@@ -10,53 +10,11 @@ namespace ShortestWay.Tests.Model
     public class GraphTests
     {
         [Test]
-        public void Markup_SetNodeInitialMark_Test()
-        {
-            // Arrange
-            var graph = new Graph
-            {
-                Nodes = new[]
-                {
-                    Mock.Of<Node>(t => t.IsStart),
-                    Mock.Of<Node>(t => t.IsStart == false)
-                }
-            };
-
-            // Act
-            graph.Markup();
-
-            // Assert
-            Assert.AreEqual(graph.Nodes[0].Mark, 0);
-            Assert.IsNull(graph.Nodes[1].Mark);
-        }
-
-        [Test]
-        public void Markup_SetNodeParentGraph_Test()
-        {
-            // Arrange
-            var graph = new Graph
-            {
-                Nodes = new[]
-                {
-                    Mock.Of<Node>(),
-                    Mock.Of<Node>()
-                }
-            };
-
-            // Act
-            graph.Markup();
-
-            // Assert
-            Assert.AreEqual(graph.Nodes[0].Graph, graph);
-            Assert.AreEqual(graph.Nodes[1].Graph, graph);
-        }
-
-        [Test]
         public void Validate_ThrowsIfNoNodes_Test()
         {
             // Arrange
-            var graph1 = new Graph();
-            var graph2 = new Graph { Nodes = new Node[0] };
+            var graph1 = new Graph<Node>();
+            var graph2 = new Graph<Node> { Nodes = new Node[0] };
 
             // Assert
             Assert.Throws<NoNodesException>(graph1.Validate);
@@ -67,14 +25,14 @@ namespace ShortestWay.Tests.Model
         public void Validate_ThrowsIfNoSingleStartNode_Test()
         {
             // Arrange
-            var graph1 = new Graph
+            var graph1 = new Graph<Node>
             {
                 Nodes = new[]
                 {
                     Mock.Of<Node>()
                 }
             };
-            var graph2 = new Graph
+            var graph2 = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -92,7 +50,7 @@ namespace ShortestWay.Tests.Model
         public void Validate_ThrowsIfStartNodeIsCrashed_Test()
         {
             // Arrange
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -109,7 +67,7 @@ namespace ShortestWay.Tests.Model
         public void Validate_ThrowsIfNoSingleFinishNode_Test()
         {
             // Arrange
-            var graph1 = new Graph
+            var graph1 = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -117,7 +75,7 @@ namespace ShortestWay.Tests.Model
                     Mock.Of<Node>()
                 }
             };
-            var graph2 = new Graph
+            var graph2 = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -136,7 +94,7 @@ namespace ShortestWay.Tests.Model
         public void Validate_ThrowsIfFinishtNodeIsCrashed_Test()
         {
             // Arrange
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -154,7 +112,7 @@ namespace ShortestWay.Tests.Model
         public void Validate_ThrowsIfNotUniqueIds_Test()
         {
             // Arrange
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -175,7 +133,7 @@ namespace ShortestWay.Tests.Model
             var node1 = Mock.Of<Node>(t => t.IsStart && t.Id == 1);
             var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) == false);
             Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -197,7 +155,7 @@ namespace ShortestWay.Tests.Model
             var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) && t.LinkWeight(node1) == 20);
             Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
             Mock.Get(node1).Setup(t => t.LinkWeight(node2)).Returns(10);
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -219,7 +177,7 @@ namespace ShortestWay.Tests.Model
             var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) && t.LinkWeight(node1) == -10);
             Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
             Mock.Get(node1).Setup(t => t.LinkWeight(node2)).Returns(-10);
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -241,7 +199,7 @@ namespace ShortestWay.Tests.Model
             var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) && t.LinkWeight(node1) == 10);
             Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
             Mock.Get(node1).Setup(t => t.LinkWeight(node2)).Returns(10);
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -258,8 +216,8 @@ namespace ShortestWay.Tests.Model
         public void Linked_ThrowsIfNoNodes_Test()
         {
             // Arrange
-            var graph1 = new Graph();
-            var graph2 = new Graph { Nodes = new Node[0] };
+            var graph1 = new Graph<Node>();
+            var graph2 = new Graph<Node> { Nodes = new Node[0] };
 
             // Assert
             Assert.Throws<NoNodesException>(() => graph1.Linked(Mock.Of<Node>()));
@@ -272,7 +230,7 @@ namespace ShortestWay.Tests.Model
             // Arrange
             var target = Mock.Of<Node>();
             var linked = Mock.Of<Node>(t => t.IsLinked(target));
-            var graph = new Graph
+            var graph = new Graph<Node>
             {
                 Nodes = new[]
                 {
@@ -287,5 +245,55 @@ namespace ShortestWay.Tests.Model
             // Assert
             Assert.AreEqual(linkedList.Single(), linked);
         }
+        [Test]
+        public void FinishNode_ThrowsIfNoSingleFinishNode_Test()
+        {
+            // Arrange
+            var graph1 = new Graph<Node>
+            {
+                Nodes = new[]
+                {
+                    Mock.Of<Node>(t => t.IsFinish == false),
+                    Mock.Of<Node>(t => t.IsFinish == false)
+                }
+            };
+
+            var graph2 = new Graph<Node>
+            {
+                Nodes = new[]
+                {
+                    Mock.Of<Node>(t => t.IsFinish),
+                    Mock.Of<Node>(t => t.IsFinish)
+                }
+            };
+
+            // Assert
+            Assert.Throws<NoSingleFinishNodeException>(() => graph1.FinishNode());
+            Assert.Throws<NoSingleFinishNodeException>(() => graph2.FinishNode());
+        }
+
+        [Test]
+        public void FinishNode_Test()
+        {
+            // Arrange
+            var node = Mock.Of<Node>(t => t.IsFinish);
+            var graph = new Graph<Node>
+            {
+                Nodes = new[]
+                {
+                    node,
+                    Mock.Of<Node>(t => t.IsFinish == false),
+                    Mock.Of<Node>(t => t.IsFinish == false)
+                }
+            };
+
+            // Act
+            var finishNode = graph.FinishNode();
+
+            // Assert
+            Assert.AreEqual(node, finishNode);
+        }
+
+        
     }
 }

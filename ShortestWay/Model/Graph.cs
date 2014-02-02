@@ -1,24 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using ShortestWay.Exceptions;
 
 namespace ShortestWay.Model
 {
+    public interface IGraph
+    {}
+
     [XmlRoot("graph")]
-    public class Graph
+    public class Graph<T> : IGraph where T : Node
     {
         [XmlElement("node")]
-        public virtual Node[] Nodes { get; set; }
-
-        public void Markup()
-        {
-            foreach (var node in Nodes)
-            {
-                node.Graph = this;
-                node.Mark = node.IsStart ? (int?) 0 : null;
-            }
-        }
+        public virtual T[] Nodes { get; set; }
 
         public void Validate()
         {
@@ -38,15 +33,10 @@ namespace ShortestWay.Model
                 throw new StartNodeIsCrashedException(startNode.Single().Id);
             }
 
-            var finishNode = Nodes.Where(t => t.IsFinish).ToList();
-            if (finishNode.Count() != 1 || finishNode.SingleOrDefault() == null)
+            var finishNode = FinishNode();
+            if (finishNode.IsCrash)
             {
-                throw new NoSingleFinishNodeException();
-            }
-
-            if (finishNode.Single().IsCrash)
-            {
-                throw new FinishNodeIsCrashedException(finishNode.Single().Id);
+                throw new FinishNodeIsCrashedException(finishNode.Id);
             }
 
             foreach (var validated in Nodes)
@@ -74,7 +64,7 @@ namespace ShortestWay.Model
             }
         }
 
-        public virtual IList<Node> Linked(Node node)
+        public virtual IList<T> Linked(Node node)
         {
             if (Nodes == null || !Nodes.Any())
             {
@@ -82,6 +72,17 @@ namespace ShortestWay.Model
             }
 
             return Nodes.Where(t => t.IsLinked(node)).ToList();
+        }
+
+        public virtual T FinishNode()
+        {
+            var finishNode = Nodes.Where(t => t.IsFinish).ToList();
+            if (finishNode.Count() != 1 || finishNode.SingleOrDefault() == null)
+            {
+                throw new NoSingleFinishNodeException();
+            }
+
+            return finishNode.Single();
         }
     }
 }

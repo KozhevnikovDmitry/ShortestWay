@@ -5,11 +5,11 @@ using System.Xml.Serialization;
 using ShortestWay.Exceptions;
 using ShortestWay.Model;
 
-namespace ShortestWay.Tests
+namespace ShortestWay
 {
     public class GraphProvider
     {
-        public Graph Load(string sourcePath)
+        public T Load<T>(string sourcePath) where T : IGraph
         {
             if (!File.Exists(sourcePath))
             {
@@ -18,14 +18,10 @@ namespace ShortestWay.Tests
 
             try
             {
-                var xmlSerializer = new XmlSerializer(typeof(Graph));
+                var xmlSerializer = new XmlSerializer(typeof(T));
                 using (var xr = new XmlTextReader(sourcePath))
                 {
-                    var result = (Graph)xmlSerializer.Deserialize(xr);
-                    foreach (var node in result.Nodes)
-                    {
-                        node.Graph = result;
-                    }
+                    var result = (T)xmlSerializer.Deserialize(xr);
                     return result;
                 }
             }

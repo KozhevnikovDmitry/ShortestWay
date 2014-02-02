@@ -53,20 +53,6 @@ namespace ShortestWay.Model
             return Links.Any(t => t.Ref == node.Id);
         }
 
-        public virtual IList<Node> Linked()
-        {
-            if (Graph == null)
-            {
-                throw new ParentGraphIsNotSetupException(Id);
-            }
-
-            return Graph.Linked(this);
-        }
-
-        public virtual Graph Graph { get; set; }
-
-        public virtual int? Mark { get; set; }
-
         public virtual int LinkWeight(Node node)
         {
             if (!IsLinked(node))
