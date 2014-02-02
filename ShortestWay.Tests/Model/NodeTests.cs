@@ -87,19 +87,6 @@ namespace ShortestWay.Tests.Model
         }
 
         [Test]
-        public void IsLinked_ReturnsFalseIfCrash_Test()
-        {
-            // Arrange
-            var node = new Node
-            {
-                Status = "crash"
-            };
-
-            // Assert
-            Assert.False(node.IsLinked(Mock.Of<Node>()));
-        }
-
-        [Test]
         public void IsLinked_ReturnsFalseIfItSelfTest()
         {
             // Arrange

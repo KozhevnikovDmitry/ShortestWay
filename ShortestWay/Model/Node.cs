@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Xml.Serialization;
 using ShortestWay.Exceptions;
 
@@ -37,11 +36,6 @@ namespace ShortestWay.Model
 
         public virtual bool IsLinked(Node node)
         {
-            if (IsCrash)
-            {
-                return false;
-            }
-
             if (node.Equals(this))
             {
                 return false;

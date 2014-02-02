@@ -19,7 +19,7 @@ namespace ShortestWay.Tests
             var graph = provider.Load<Graph<Node>>(@"xml\simple-valid.xml");
 
             // Assert
-            Assert.AreEqual(graph.Nodes.Count(), 4);
+            Assert.AreEqual(graph.Nodes.Count(), 5);
         }
         
         [Test]
@@ -32,7 +32,7 @@ namespace ShortestWay.Tests
             var graph = provider.Load<DijkstraGraph>(@"xml\simple-valid.xml");
 
             // Assert
-            Assert.AreEqual(graph.Nodes.Count(), 4);
+            Assert.AreEqual(graph.Nodes.Count(), 5);
         }
 
         [Test]

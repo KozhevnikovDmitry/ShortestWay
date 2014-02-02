@@ -7,11 +7,19 @@
 	</node>
   <node id="2" status="crash">
     <link ref="1" weight="5" />
+    <link ref="5" weight="10" />
   </node>
   <node id="3">
     <link ref="1" weight="5" />
+    <link ref="5" weight="15" />
   </node>
-	<node id="4" role="finish">
-		<link ref="1" weight="5" />
+  <node id="4" >
+    <link ref="1" weight="5" />
+    <link ref="5" weight="20" />
+  </node>
+	<node id="5" role="finish">
+		<link ref="2" weight="10" />
+    <link ref="3" weight="15" />
+    <link ref="4" weight="20" />
 	</node>
 </graph>

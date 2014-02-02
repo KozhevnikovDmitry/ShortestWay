@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Serialization;
 using ShortestWay.Exceptions;
@@ -7,7 +6,7 @@ using ShortestWay.Exceptions;
 namespace ShortestWay.Model
 {
     public interface IGraph
-    {}
+    { }
 
     [XmlRoot("graph")]
     public class Graph<T> : IGraph where T : Node
@@ -46,19 +45,22 @@ namespace ShortestWay.Model
                     if (validated.Id == node.Id)
                         throw new NodesWithNotUniqueIdsException(validated.Id);
 
-                    if (validated.IsLinked(node) && !node.IsLinked(validated))
+                    if (validated.IsLinked(node) != node.IsLinked(validated))
                     {
                         throw new NodeLinkIsNotBidirectionalException(validated.Id, node.Id);
                     }
 
-                    if (validated.LinkWeight(node) != node.LinkWeight(validated))
+                    if (validated.IsLinked(node) && node.IsLinked(validated))
                     {
-                        throw new NodeLinkHasInconsistentWeightException(validated.Id, node.Id);
-                    }
+                        if (validated.LinkWeight(node) != node.LinkWeight(validated))
+                        {
+                            throw new NodeLinkHasInconsistentWeightException(validated.Id, node.Id);
+                        }
 
-                    if (validated.LinkWeight(node) <= 0)
-                    {
-                        throw new NodeLinkHasNonPositiveWeightException(validated.Id, node.Id);
+                        if (validated.LinkWeight(node) <= 0)
+                        {
+                            throw new NodeLinkHasNonPositiveWeightException(validated.Id, node.Id);
+                        }
                     }
                 }
             }
@@ -71,7 +73,7 @@ namespace ShortestWay.Model
                 throw new NoNodesException();
             }
 
-            return Nodes.Where(t => t.IsLinked(node)).ToList();
+            return Nodes.Where(t => t.IsLinked(node) && !t.IsCrash).ToList();
         }
 
         public virtual T FinishNode()

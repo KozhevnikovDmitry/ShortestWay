@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Moq;
 using NUnit.Framework;
 using ShortestWay.Exceptions;
@@ -126,13 +127,14 @@ namespace ShortestWay.Tests.Model
             Assert.AreEqual(ex.Message, "Some nodes have the same id [1]");
         }
 
-        [Test]
-        public void Validate_ThrowsIfNodeLinkIsNotBidirectionalTest()
+        [TestCase(true, false, ExpectedException = typeof(NodeLinkIsNotBidirectionalException))]
+        [TestCase(false, true, ExpectedException = typeof(NodeLinkIsNotBidirectionalException))]
+        public void Validate_ThrowsIfNodeLinkIsNotBidirectionalTest(bool isLinked1to2, bool isLinked2to1)
         {
             // Arrange
             var node1 = Mock.Of<Node>(t => t.IsStart && t.Id == 1);
-            var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) == false);
-            Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
+            var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) == isLinked2to1);
+            Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(isLinked1to2);
             var graph = new Graph<Node>
             {
                 Nodes = new[]
@@ -143,8 +145,15 @@ namespace ShortestWay.Tests.Model
             };
 
             // Assert
-            var ex = Assert.Throws<NodeLinkIsNotBidirectionalException>(graph.Validate);
-            Assert.AreEqual(ex.Message, "Link between nodes [1] and [2] is not bidirectional");
+            try
+            {
+                graph.Validate();
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(ex.Message, "Link between nodes [1] and [2] is not bidirectional");
+                throw;
+            }
         }
 
         [Test]
@@ -192,13 +201,34 @@ namespace ShortestWay.Tests.Model
         }
 
         [Test]
-        public void Validate_NotThrows_Test()
+        public void Validate_NotThrowsOnLinked_Test()
         {
             // Arrange
             var node1 = Mock.Of<Node>(t => t.IsStart && t.Id == 1);
             var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) && t.LinkWeight(node1) == 10);
             Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(true);
             Mock.Get(node1).Setup(t => t.LinkWeight(node2)).Returns(10);
+            var graph = new Graph<Node>
+            {
+                Nodes = new[]
+                {
+                    node1,
+                    node2
+                }
+            };
+
+            // Assert
+            Assert.DoesNotThrow(graph.Validate);
+        }
+        
+        [Test]
+        public void Validate_NotThrowsOnNotLinked_Test()
+        {
+            // Arrange
+            var node1 = Mock.Of<Node>(t => t.IsStart && t.Id == 1);
+            var node2 = Mock.Of<Node>(t => t.IsFinish && t.Id == 2 && t.IsLinked(node1) == false && t.LinkWeight(node1) == -10);
+            Mock.Get(node1).Setup(t => t.IsLinked(node2)).Returns(false);
+            Mock.Get(node1).Setup(t => t.LinkWeight(node2)).Returns(-15);
             var graph = new Graph<Node>
             {
                 Nodes = new[]
@@ -245,6 +275,31 @@ namespace ShortestWay.Tests.Model
             // Assert
             Assert.AreEqual(linkedList.Single(), linked);
         }
+
+        [Test]
+        public void Linked_ReturnsExceptCrash_Test()
+        {
+            // Arrange
+            var target = Mock.Of<Node>();
+            var crash = Mock.Of<Node>(t => t.IsLinked(target) && t.IsCrash);
+            var linked = Mock.Of<Node>(t => t.IsLinked(target));
+            var graph = new Graph<Node>
+            {
+                Nodes = new[]
+                {
+                    linked,
+                    crash,
+                    Mock.Of<Node>()
+                }
+            };
+
+            // Act
+            var linkedList = graph.Linked(target);
+
+            // Assert
+            Assert.AreEqual(linkedList.Single(), linked);
+        }
+
         [Test]
         public void FinishNode_ThrowsIfNoSingleFinishNode_Test()
         {
