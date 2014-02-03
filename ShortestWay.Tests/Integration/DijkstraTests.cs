@@ -1,13 +1,34 @@
 ﻿using NUnit.Framework;
 using ShortestWay.Dijkstra;
+using ShortestWay.Exceptions;
 
 namespace ShortestWay.Tests.Integration
 {
     [TestFixture]
     public class DijkstraTests
     {
+        [TestCase("xml/no-nodes.xml", ExpectedException = typeof(NoNodesException))]
+        [TestCase("xml/no-single-start.xml", ExpectedException = typeof(NoSingleStartNodeException))]
+        [TestCase("xml/no-single-finish.xml", ExpectedException = typeof(NoSingleFinishNodeException))]
+        [TestCase("xml/finish-crash.xml", ExpectedException = typeof(FinishNodeIsCrashedException))]
+        [TestCase("xml/not-unique-ids.xml", ExpectedException = typeof(NodesWithNotUniqueIdsException))]
+        [TestCase("xml/link-is-not-bidirectional.xml", ExpectedException = typeof(NodeLinkIsNotBidirectionalException))]
+        [TestCase("xml/link-is-inconsistent-weight.xml", ExpectedException = typeof(NodeLinkHasInconsistentWeightException))]
+        [TestCase("xml/link-weight-is-nonpositive.xml", ExpectedException = typeof(NodeLinkHasNonPositiveWeightException))]
+        public void Validate_Failure_Test(string xml)
+        {
+            // Arrange
+            var graph = new GraphProvider().Load<DijkstraGraph>(xml);
+            graph.Validate();
+            graph.Markup();
+            var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
+
+            // Assert
+            dijkstra.Compute(graph).GetShortestWay(graph);
+        }
+
         [Test]
-        public void SimpleValid_Test()
+        public void SimpleSample_Test()
         {
             // Arrange
             var graph = new GraphProvider().Load<DijkstraGraph>(@"xml\simple-valid.xml");

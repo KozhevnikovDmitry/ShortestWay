@@ -50,7 +50,7 @@
   <ItemGroup>
     <Compile Include="Dijkstra\DijkstraNodeTests.cs" />
     <Compile Include="Dijkstra\DijkstraTests.cs" />
-    <Compile Include="GraphProviderTests.cs" />
+    <Compile Include="Integration\GraphProviderTests.cs" />
     <Compile Include="Dijkstra\DijkstraGraphTests.cs" />
     <Compile Include="Integration\DijkstraTests.cs" />
     <Compile Include="Model\GraphTest.cs" />
@@ -64,6 +64,30 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="xml\link-weight-is-nonpositive.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\link-is-inconsistent-weight.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\link-is-not-bidirectional.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\not-unique-ids.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\finish-crash.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\no-single-finish.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\no-single-start.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="xml\no-nodes.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="xml\wrong.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

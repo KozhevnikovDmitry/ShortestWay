@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<graph>
+  <node id="1" role="start">
+    <link ref="2" weight="5" />
+  </node>
+  <node id="2" role="finish">
+    <link ref="1" weight="10" />
+  </node>
+</graph>

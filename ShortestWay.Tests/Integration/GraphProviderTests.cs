@@ -4,7 +4,7 @@ using ShortestWay.Dijkstra;
 using ShortestWay.Exceptions;
 using ShortestWay.Model;
 
-namespace ShortestWay.Tests
+namespace ShortestWay.Tests.Integration
 {
     [TestFixture]
     public class GraphProviderTests
