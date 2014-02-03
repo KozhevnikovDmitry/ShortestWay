@@ -46,24 +46,7 @@ namespace ShortestWay.Tests.Model
             Assert.Throws<NoSingleStartNodeException>(graph1.Validate);
             Assert.Throws<NoSingleStartNodeException>(graph2.Validate);
         }
-
-        [Test]
-        public void Validate_ThrowsIfStartNodeIsCrashed_Test()
-        {
-            // Arrange
-            var graph = new Graph<Node>
-            {
-                Nodes = new[]
-                {
-                    Mock.Of<Node>(t => t.IsStart && t.IsCrash && t.Id == 1)
-                }
-            };
-
-            // Assert
-            var ex = Assert.Throws<StartNodeIsCrashedException>(graph.Validate);
-            Assert.AreEqual(ex.Message, "Start node is crashed [1]");
-        }
-
+        
         [Test]
         public void Validate_ThrowsIfNoSingleFinishNode_Test()
         {

@@ -51,11 +51,6 @@ namespace ShortestWay.Model
                 throw new NoSingleStartNodeException();
             }
 
-            if (startNode.Single().IsCrash)
-            {
-                throw new StartNodeIsCrashedException(startNode.Single().Id);
-            }
-
             var finishNode = FinishNode();
             if (finishNode.IsCrash)
             {
