@@ -4,6 +4,9 @@ using ShortestWay.Exceptions;
 
 namespace ShortestWay.Model
 {
+    /// <summary>
+    /// Road node - top of the graph
+    /// </summary>
     [XmlRoot("node")]
     public class Node
     {
@@ -34,6 +37,10 @@ namespace ShortestWay.Model
             get { return Status == "crash"; }
         }
 
+        /// <summary>
+        /// Returns true if current node is linked provided <paramref name="node"/>
+        /// </summary>
+        /// <exception cref="LinksAreNotSetupException"></exception>
         public virtual bool IsLinked(Node node)
         {
             if (node.Equals(this))
@@ -47,6 +54,10 @@ namespace ShortestWay.Model
             return Links.Any(t => t.Ref == node.Id);
         }
 
+        /// <summary>
+        /// Returns weight of link between current and provided <paramref name="node"/>
+        /// </summary>
+        /// <exception cref="NodesAreNotLinkedToGetWeghtException"></exception>
         public virtual int LinkWeight(Node node)
         {
             if (!IsLinked(node))

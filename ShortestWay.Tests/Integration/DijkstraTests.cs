@@ -16,8 +16,8 @@ namespace ShortestWay.Tests.Integration
             var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
 
             // Act
-            dijkstra.Compute(graph);
-            var way = dijkstra.Find(graph);
+            var way = dijkstra.Compute(graph)
+                              .GetShortestWay(graph);
 
             // Assert
             Assert.AreEqual(way[0].Id, 1);
@@ -25,7 +25,7 @@ namespace ShortestWay.Tests.Integration
             Assert.AreEqual(way[2].Id, 5);
 
             Assert.AreEqual(way.Count, 3);
-            Assert.AreEqual((way[2] as DijkstraNode).Mark, 20);
+            Assert.AreEqual((way[2] as DijkstraNode).TotalWeigth, 20);
         }
 
         [Test]
@@ -38,7 +38,8 @@ namespace ShortestWay.Tests.Integration
             var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
 
             // Act
-            var way = dijkstra.Compute(graph).Find(graph);
+            var way = dijkstra.Compute(graph)
+                              .GetShortestWay(graph);
 
             // Assert
             Assert.AreEqual(way[0].Id, 1);
@@ -48,7 +49,7 @@ namespace ShortestWay.Tests.Integration
             Assert.AreEqual(way[4].Id, 10);
 
             Assert.AreEqual(way.Count, 5);
-            Assert.AreEqual((way[4] as DijkstraNode).Mark, 22);
+            Assert.AreEqual((way[4] as DijkstraNode).TotalWeigth, 22);
         }
     }
 }

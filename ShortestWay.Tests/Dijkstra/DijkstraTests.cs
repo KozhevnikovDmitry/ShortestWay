@@ -41,8 +41,8 @@ namespace ShortestWay.Tests.Dijkstra
         public void Compute_UpdateLinkedMark_IfThisWayShorter_Test()
         {
             // Arrange
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == 30);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 30);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -53,15 +53,15 @@ namespace ShortestWay.Tests.Dijkstra
             dijkstra.Compute(graph);
 
             // Assert
-            Assert.AreEqual(linked.Mark, 20);
+            Assert.AreEqual(linked.TotalWeigth, 20);
         }
         
         [Test]
         public void Compute_UpdateLinkedMark_IfLinkedMarkIsinfinity_Test()
         {
             // Arrange
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == null);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == null);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -72,15 +72,15 @@ namespace ShortestWay.Tests.Dijkstra
             dijkstra.Compute(graph);
 
             // Assert
-            Assert.AreEqual(linked.Mark, 20);
+            Assert.AreEqual(linked.TotalWeigth, 20);
         }
 
         [Test]
         public void Compute_NotUpdateLinkedMark_IfThisWayLonger_Test()
         {
             // Arrange
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == 5);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 5);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -91,15 +91,15 @@ namespace ShortestWay.Tests.Dijkstra
             dijkstra.Compute(graph);
 
             // Assert
-            Assert.AreEqual(linked.Mark, 5);
+            Assert.AreEqual(linked.TotalWeigth, 5);
         }
         
         [Test]
         public void Compute_ChangeLinkedPreviousByCurrent_IfThisWayShorter_Test()
         {
             // Arrange
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == 30);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 30);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -117,8 +117,8 @@ namespace ShortestWay.Tests.Dijkstra
         public void Compute_ChangeLinkedPreviousByCurrent_IfLinkedMarkIsinfinity_Test()
         {
             // Arrange
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == null);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == null);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -137,8 +137,8 @@ namespace ShortestWay.Tests.Dijkstra
         {
             // Arrange
             var previous = Mock.Of<DijkstraNode>();
-            var linked = Mock.Of<DijkstraNode>(t => t.Mark == 5 && t.Previous == previous);
-            var current = Mock.Of<DijkstraNode>(t => t.Mark == 10 && t.LinkWeight(linked) == 10);
+            var linked = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 5 && t.Previous == previous);
+            var current = Mock.Of<DijkstraNode>(t => t.TotalWeigth == 10 && t.LinkWeight(linked) == 10);
             var graph = Mock.Of<DijkstraGraph>(t => t.HasUnvisited() == true
                                                  && t.Linked(current) == new[] { linked });
             Mock.Get(graph).Setup(t => t.NearestUnvisited()).Returns(current).Callback(() =>
@@ -156,24 +156,24 @@ namespace ShortestWay.Tests.Dijkstra
         public void Find_ThrowsIfFinishNodeHasNoPrevious_Test()
         {
             // Arrange
-            var finish = Mock.Of<DijkstraNode>(d => d.Mark == 1);
+            var finish = Mock.Of<DijkstraNode>(d => d.TotalWeigth == 1);
             var graph = Mock.Of<DijkstraGraph>(t => t.FinishNode() == finish);
             var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
             
             // Assert
-            Assert.Throws<NoRouteFromStartToFinishException>(() => dijkstra.Find(graph));
+            Assert.Throws<NoRouteFromStartToFinishException>(() => dijkstra.GetShortestWay(graph));
         }
 
         [Test]
         public void Find_ThrowsIfFinishNodeMarkIsinfinity_Test()
         {
             // Arrange
-            var finish = Mock.Of<DijkstraNode>(d => d.Mark == null && d.Previous == Mock.Of<DijkstraNode>());
+            var finish = Mock.Of<DijkstraNode>(d => d.TotalWeigth == null && d.Previous == Mock.Of<DijkstraNode>());
             var graph = Mock.Of<DijkstraGraph>(t => t.FinishNode() == finish);
             var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
 
             // Assert
-            Assert.Throws<NoRouteFromStartToFinishException>(() => dijkstra.Find(graph));
+            Assert.Throws<NoRouteFromStartToFinishException>(() => dijkstra.GetShortestWay(graph));
         }
 
         [Test]
@@ -182,12 +182,12 @@ namespace ShortestWay.Tests.Dijkstra
             // Arrange
             var prevPrev = Mock.Of<DijkstraNode>();
             var prev = Mock.Of<DijkstraNode>(t => t.Previous == prevPrev);
-            var finishNode = Mock.Of<DijkstraNode>(t => t.Previous == prev && t.Mark == 100500);
+            var finishNode = Mock.Of<DijkstraNode>(t => t.Previous == prev && t.TotalWeigth == 100500);
             var graph = Mock.Of<DijkstraGraph>(t => t.FinishNode() == finishNode);
             var dijkstra = new ShortestWay.Dijkstra.Dijkstra();
 
             // Act
-            var way = dijkstra.Find(graph);
+            var way = dijkstra.GetShortestWay(graph);
 
             // Assert
             Assert.AreEqual(way[0], prevPrev);

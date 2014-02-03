@@ -4,8 +4,14 @@ using ShortestWay.Model;
 
 namespace ShortestWay.Dijkstra
 {
+    /// <summary>
+    /// Class, that finds shortest way in graph using Dijkstra algorythm.
+    /// </summary>
     public class Dijkstra
     {
+        /// <summary>
+        /// Computes total wieghts from start node for all nodes in graph
+        /// </summary>
         public Dijkstra Compute(DijkstraGraph graph)
         {
             while (graph.HasUnvisited())
@@ -13,10 +19,12 @@ namespace ShortestWay.Dijkstra
                 var current = graph.NearestUnvisited();
                 foreach (var node in graph.Linked(current))
                 {
-                    var weight = current.Mark + current.LinkWeight(node);
-                    if (!node.Mark.HasValue || weight < node.Mark)
+                    var weightFromCurrent = current.TotalWeigth + current.LinkWeight(node);
+
+                    // if this way shorter
+                    if (!node.TotalWeigth.HasValue || weightFromCurrent < node.TotalWeigth)
                     {
-                        node.Mark = weight;
+                        node.TotalWeigth = weightFromCurrent;
                         node.Previous = current;
                     }
                 }
@@ -27,10 +35,14 @@ namespace ShortestWay.Dijkstra
             return this;
         }
 
-        public List<Node> Find(DijkstraGraph graph)
+        /// <summary>
+        /// Returns list of nodes that represents the shortest way from start to finish node in graph.
+        /// </summary>
+        /// <exception cref="NoRouteFromStartToFinishException"></exception>
+        public List<Node> GetShortestWay(DijkstraGraph graph)
         {
             var finish = graph.FinishNode();
-            if (!finish.Mark.HasValue ||
+            if (!finish.TotalWeigth.HasValue ||
                 finish.Previous == null)
             {
                 throw new NoRouteFromStartToFinishException();

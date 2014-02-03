@@ -31,12 +31,13 @@ namespace ShortestWay
                     Console.WriteLine("Path was not specified");
                     return;
                 }
+
                 var arg = args.Single();
                 FindWay(arg);
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error {0}", ex.Message);
+                Console.WriteLine("Error: {0}", ex.Message);
             }
         }
 
@@ -45,8 +46,9 @@ namespace ShortestWay
             var graph = new GraphProvider().Load<DijkstraGraph>(path);
             graph.Validate();
             graph.Markup();
-            var dijkstra = new Dijkstra.Dijkstra();
-            var way = dijkstra.Compute(graph).Find(graph);
+            var way = new Dijkstra.Dijkstra()
+                                  .Compute(graph)
+                                  .GetShortestWay(graph);
             PrintResults(way);
             
         }

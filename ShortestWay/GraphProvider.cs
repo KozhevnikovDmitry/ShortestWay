@@ -7,8 +7,18 @@ using ShortestWay.Model;
 
 namespace ShortestWay
 {
+    /// <summary>
+    /// Provides graph examples from external xml-files.
+    /// </summary>
     public class GraphProvider
     {
+        /// <summary>
+        /// Load and returns graph <typeparam name="T"/> example from external source by path.
+        /// </summary>
+        /// <typeparam name="T">Particular graph type</typeparam>
+        /// <param name="sourcePath">path to xml-source</param>
+        /// <exception cref="SourceIsNotValidException"></exception>
+        /// <exception cref="SourceIsNotExistsException"></exception>
         public T Load<T>(string sourcePath) where T : IGraph
         {
             if (!File.Exists(sourcePath))

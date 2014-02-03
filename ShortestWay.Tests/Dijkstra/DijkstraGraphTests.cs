@@ -25,8 +25,8 @@ namespace ShortestWay.Tests.Dijkstra
             graph.Markup();
 
             // Assert
-            Assert.AreEqual(graph.Nodes[0].Mark, 0);
-            Assert.IsNull(graph.Nodes[1].Mark);
+            Assert.AreEqual(graph.Nodes[0].TotalWeigth, 0);
+            Assert.IsNull(graph.Nodes[1].TotalWeigth);
         }
 
         [Test]
@@ -54,7 +54,7 @@ namespace ShortestWay.Tests.Dijkstra
                 Nodes = new[]
                 {
                     Mock.Of<DijkstraNode>(t => t.IsVisited),
-                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == null)
+                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == null)
                 }
             };
 
@@ -71,7 +71,7 @@ namespace ShortestWay.Tests.Dijkstra
                 Nodes = new[]
                 {
                     Mock.Of<DijkstraNode>(t => t.IsVisited),
-                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == 1)
+                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == 1)
                 }
             };
 
@@ -88,7 +88,7 @@ namespace ShortestWay.Tests.Dijkstra
                 Nodes = new[]
                 {
                     Mock.Of<DijkstraNode>(t => t.IsVisited),
-                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == null)
+                    Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == null)
                 }
             };
 
@@ -100,10 +100,10 @@ namespace ShortestWay.Tests.Dijkstra
         public void NearestUnvisited_ReturnsFirstUnvisitedWithMinimalMark_Test()
         {
             // Arrange
-            var node1 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == 3);
-            var node2 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == 3);
-            var node3 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.Mark == 10);
-            var node4 = Mock.Of<DijkstraNode>(t => t.IsVisited == true && t.Mark == 1);
+            var node1 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == 3);
+            var node2 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == 3);
+            var node3 = Mock.Of<DijkstraNode>(t => t.IsVisited == false && t.TotalWeigth == 10);
+            var node4 = Mock.Of<DijkstraNode>(t => t.IsVisited == true && t.TotalWeigth == 1);
             var graph = new DijkstraGraph()
             {
                 Nodes = new[]

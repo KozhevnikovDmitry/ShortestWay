@@ -13,7 +13,7 @@ namespace ShortestWay.Tests.Dijkstra
             var node = new DijkstraNode();
 
             // Assert
-            Assert.IsNull(node.Mark);
+            Assert.IsNull(node.TotalWeigth);
             Assert.IsNull(node.Previous);
             Assert.False(node.IsVisited);
         }
