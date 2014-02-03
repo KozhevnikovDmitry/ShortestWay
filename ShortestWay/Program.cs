@@ -10,62 +10,45 @@ namespace ShortestWay
     {
         static void Main(string[] args)
         {
-            var result = 0;
-            if (args.Any())
-            {
-                result= Process(args);
-            }
-            
-            while (result == 0)
-            {
-                Console.WriteLine("Enter command");
-                var command = Console.ReadLine();
-                result = Process(new[] { command });
-            }
+            Console.WriteLine("Shortest way by Kozhevnikov Dmitry");
+            Process(args);
             Console.WriteLine("Press any key to escape");
             Console.ReadKey();
         }
 
-        private static int Process(string[] args)
+        private static void Process(string[] args)
         {
             try
             {
-                if (args.Count() == 1)
-                {
-                    var arg = args.Single();
-                    if (arg.ToUpper() == "EXIT")
-                    {
-                        return 1;
-                    }
-                    FindWay(arg);
-                }
-                else
+                if (args.Count() > 1)
                 {
                     Console.WriteLine("Wrong number of arguments");
+                    return;
                 }
-                return 0;
+
+                if (!args.Any())
+                {
+                    Console.WriteLine("Path was not specified");
+                    return;
+                }
+                var arg = args.Single();
+                FindWay(arg);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Error {0}", ex.Message);
-                return 0;
             }
         }
 
         private static void FindWay(string path)
         {
-            var way = Dijkstra(path);
-            PrintResults(way);
-            
-        }
-
-        private static List<Node> Dijkstra(string path)
-        {
             var graph = new GraphProvider().Load<DijkstraGraph>(path);
             graph.Validate();
             graph.Markup();
             var dijkstra = new Dijkstra.Dijkstra();
-            return dijkstra.Compute(graph).Find(graph);
+            var way = dijkstra.Compute(graph).Find(graph);
+            PrintResults(way);
+            
         }
 
         private static void PrintResults(List<Node> way)

@@ -1,0 +1,1 @@
+ShortestWay.exe shortestway-sample.xml
